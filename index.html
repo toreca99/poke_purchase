@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>カード一覧</title>
+  <style>
+    /* 変数定義：テーマカラーやフォントサイズなど */
+    :root {
+      --color-primary: #f88379; /* メインの強調色 */
+      --color-gray-light: #f9f9f9; /* 背景などの薄いグレー */
+      --color-gray-border: #ccc; /* 境界線の色 */
+      --font-size-base: 14px; /* 基本フォントサイズ */
+      --font-size-small: 12px;
+      --font-size-xsmall: 10px;
+      --card-border-radius: 6px; /* カードなどの角の丸み */
+      --spacing-xs: 4px; /* 余白の最小単位 */
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+    }
+
+    /* 全体設定 */
+    body {
+      font-family: sans-serif;
+      padding: 10px;
+      background: #fff;
+    }
+
+    /* 注意書きのスタイル */
+    .notice {
+      font-size: 12px;
+      color: #d00;
+      margin-bottom: 10px;
+    }
+
+    /* 検索とボタン全体のレイアウト */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    /* 検索ボックスのラッパー */
+    .search-wrapper {
+      display: flex;
+      width: 100%;
+    }
+
+    /* 入力欄のスタイル */
+    #searchInput {
+      flex: 1;
+      padding: 8px;
+      font-size: var(--font-size-base);
+      border: 1px solid var(--color-gray-border);
+      border-radius: 4px;
+    }
+
+    /* キーワードボタン群 */
+    .keyword-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      overflow-x: auto;
+    }
+
+    /* 各キーワードボタンの見た目 */
+    .keyword-buttons button {
+      font-size: var(--font-size-small);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      background-color: #eee;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* リセット・ソートボタン群 */
+    .buttons-wrapper {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+
+    #resetButton {
+      background-color: #666;
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .buttons-wrapper button,
+    .buttons-wrapper select {
+      flex: 1;
+      padding: 8px;
+      font-size: var(--font-size-base);
+      box-sizing: border-box;
+    }
+
+    /* カードを並べるグリッド表示 */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 初期は4列 */
+      gap: 8px;
+    }
+
+    /* ブレイクポイントで列数を変更 */
+    @media (min-width: 480px) {
+      .card-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (min-width: 768px) {
+      .card-grid { grid-template-columns: repeat(8, 1fr); }
+    }
+
+    /* 各カードのデザイン */
+    .card {
+      border: 1px solid var(--color-gray-border);
+      border-radius: var(--card-border-radius);
+      padding: 4px;
+      text-align: center;
+      background-color: var(--color-gray-light);
+      font-size: var(--font-size-xsmall);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 210px;
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+      max-height: 120px;
+      object-fit: contain;
+      margin-bottom: 6px;
+    }
+
+    .card-name {
+      font-weight: bold;
+      margin: 2px 0;
+      font-size: 7px;
+      white-space: normal;
+      cursor: pointer;
+    }
+
+    .card-texts {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      flex-grow: 1;
+    }
+
+.card-quantity {
+  font-weight: bold;
+  color: #a66b6f;
+}
+
+/* モバイル（スマホ）用 */
+@media (max-width: 480px) {
+  .card-quantity {
+    font-size: 10px;  /* ← お望みで大きく */
+  }
+}
+
+/* PC用 */
+@media (min-width: 481px) {
+  .card-quantity {
+    font-size: 13px;
+  }
+}
+
+    /* 価格表示スタイル */
+    .card-price {
+      
+      font-weight: bold;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: auto;
+    }
+
+/* スマホ用（480px以下） */
+@media (max-width: 480px) {
+  .card-price {
+    font-size: 10px;
+  }
+}  /* ← ここでメディアクエリブロックを閉じる */
+
+/* 店頭価格の色 */
+.price-store {
+  color: #e53935 !important;
+  font-weight: bold;
+}
+
+/* 郵送価格の色 */
+.price-mail {
+  color: #43a047 !important;
+  font-weight: bold;
+}
+
+
+    /* グレイアウト用クラス（在庫0など） */
+    .gray-out {
+      opacity: 0.9;
+      filter: grayscale(100%);
+      pointer-events: none;
+    }
+
+    /* もっと見るボタンのスタイル */
+    #loadMoreButton {
+      margin-top: 30px;
+      width: 100%;
+      padding: 12px;
+      font-size: 15px;
+      border: none;
+      background-color: var(--color-primary);
+      color: white;
+      border-radius: var(--card-border-radius);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- 注意事項を表示するエリア -->
+  <div class="notice">
+※データ容量の都合上、読み込みに時間がかかる場合がございます。<br>
+※価格や募集枚数の更新にラグがある場合がございます。<br>
+※相場の変動や在庫状況によって、予告なく<br>
+    　募集枚数や価格に変動がある場合がございます。<br>
+※募集枚数が0枚の場合でも購入できる場合があります!!<br>
+    　是非、お気軽にスタッフにお尋ねください!!<br>
+※基本的に画像のカードは【PSA10】の価格でございます。未開封商品は【未開封】と記載のある商品の価格です。
+  </div>
+
+ 
+    <!-- 検索入力欄
+  placeholder属性は、入力欄が空の時に薄く表示されるヒントテキストです。
+  ここを編集すると検索ボックス内の説明文が変わります。 -->
+
+  <div class="controls">
+    <div class="search-wrapper">
+      <input type="text" id="searchInput" placeholder="カード名や型番、収録パックで検索" />
+    </div>
+
+    <div class="keyword-buttons">
+       <!-- 特定のキーワードで簡単に検索可能なボタン群 -->
+      <button onclick="searchKeyword('リザードン')">リザードン系統</button>
+      <button onclick="searchKeyword('ピカチュウ')">ピカチュウ系統</button>
+      <button onclick="searchKeyword('ミュウ')">ミュウ系統</button>
+      <button onclick="searchKeyword('ナンジャモ')">ナンジャモ系統</button>
+     <button onclick="searchKeyword('リーリエ')">リーリエ系統</button>
+     <button onclick="searchKeyword('マリィ')">マリィ系統</button>
+     <button onclick="searchKeyword('SAR')">SAR系統</button>
+      <button onclick="searchKeyword('V')">VMAX・V系統</button>
+      <button onclick="searchKeyword('GX')">GX系統</button>
+      <button onclick="searchKeyword('ex')">ex・EX系統</button>
+      <button onclick="searchKeyword('nagaba')">nagaba系統</button>
+      <button onclick="searchKeyword('メガ')">メガシンカ系統</button>
+     <button onclick="searchKeyword('マス')">マスターボール系統</button>
+      <button onclick="searchKeyword('テラスタル')">テラスタル系統</button> 
+      <button onclick="searchKeyword('th')">周年系統</button>
+      
+      <!-- 必要に応じてさらに追加可能 -->
+    </div>
+
+    <div class="buttons-wrapper">
+      <button id="resetButton" aria-label="検索条件をリセット">検索条件をリセット</button>
+      <select id="sortSelect" aria-label="ソート順を選択">
+        <option value="price">価格（高い順）</option>
+        <option value="priceLow">価格（安い順）</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- カードの表示エリア（JSで動的に中身が作られる） -->
+  <div class="card-grid" id="cardList"></div>
+
+  <!-- 追加読み込みボタン -->
+  <button id="loadMoreButton" aria-label="さらにカードを読み込む">こちらをタップして、さらにカードを読み込む</button>
+
+  <!-- 外部ライブラリ：CSV読み込みのために使用 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
+  <script>
+    // カード情報CSVのURL（GoogleスプレッドシートのCSVエクスポートリンク　シートごとに張り付け）
+const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgSjXDetFkCm904ILmhH9UB24MbFrPV0TNdOKFJI_jxr7hvDy8hymSpj4ZX34_4ICBmqHa-QAT8qSo/pub?gid=1393270336&single=true&output=csv';
+
+let cards = [];
+let filteredCards = [];
+let currentPage = 0;
+const cardsPerPage = 120;
+
+function searchKeyword(keyword) {
+  document.getElementById('searchInput').value = keyword;
+  applyFilterSort();
+}
+
+function applyFilterSort() {
+  const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
+  const sortValue = document.getElementById('sortSelect').value;
+
+  filteredCards = cards.filter(card => {
+    return card["カード名 型番 レアリティ"] &&
+           card["カード名 型番 レアリティ"].toLowerCase().includes(keyword);
+  });
+
+  if (sortValue === 'price') {
+    filteredCards.sort((a, b) => {
+      const aPrice = Number((a["店頭価格"] || '0').replace(/[¥,\s]/g, '')) || 0;
+      const bPrice = Number((b["店頭価格"] || '0').replace(/[¥,\s]/g, '')) || 0;
+      return bPrice - aPrice;
+    });
+  } else if (sortValue === 'priceLow') {
+    filteredCards.sort((a, b) => {
+      const aPrice = Number((a["店頭価格"] || '0').replace(/[¥,\s]/g, '')) || 0;
+      const bPrice = Number((b["店頭価格"] || '0').replace(/[¥,\s]/g, '')) || 0;
+      return aPrice - bPrice;
+    });
+  }
+
+  currentPage = 0;
+  displayNextPage();
+}
+
+async function fetchCsvData() {
+  document.getElementById('cardList').textContent = '読み込み中.....';
+  try {
+    const response = await fetch(csvUrl);
+    const csvText = await response.text();
+    const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+
+    cards = parsed.data.map(card => ({
+      "カード名 型番 レアリティ": card["カード名 型番 レアリティ"],
+      "募集枚数": card["募集枚数"],
+      "店頭価格": card["店頭価格"],
+      "最低価格": card["最低価格"],
+      "画像URL": card["画像URL"],
+      "グレイアウト発動時専用": card["グレイアウト発動時専用"]
+    }));
+
+    applyFilterSort();
+  } catch (error) {
+    console.error('CSV読み込みエラー:', error);
+    document.getElementById('cardList').textContent = 'データの読み込みに失敗しました。';
+  }
+}
+
+function displayNextPage() {
+  const start = currentPage * cardsPerPage;
+  const end = start + cardsPerPage;
+  const cardsToShow = filteredCards.slice(start, end);
+
+  if (currentPage === 0) {
+    document.getElementById('cardList').innerHTML = '';
+  }
+
+  let html = '';
+
+  cardsToShow.forEach(card => {
+    const isZero = (card["募集枚数"] || "").trim() === "0枚募集中";
+    const grayClass = isZero ? 'gray-out' : '';
+
+    const normalRaw = card["店頭価格"] || '0';
+    const foilRaw = card["最低価格"] || '0';
+
+    const normalPrice = Number(normalRaw.replace(/[¥,\s]/g, '')) || 0;
+    const foilPrice = Number(foilRaw.replace(/[¥,\s]/g, '')) || 0;
+
+  const normalText = `<span class="price-store">店頭買取価格</span><br><span class="price-store">¥${normalPrice.toLocaleString()}</span>`;
+  const foilText = `<span class="price-mail">最低買取価格</span><br><span class="price-mail">¥${foilPrice.toLocaleString()}</span>`;
+
+    const altText = card["グレイアウト発動時専用"] || '';
+const priceDisplay = isZero
+  ? (altText ? altText : '店頭で確認')
+  : `${normalText}<br>${foilText}`;
+
+
+html += `
+  <div class="card ${grayClass}">
+    <img src="${card.画像URL}" alt="${card["カード名 型番 レアリティ"]}" loading="lazy" />
+    <div class="card-name">${card["カード名 型番 レアリティ"]}</div>
+    <div class="card-texts">
+      <div class="card-quantity">本日${isZero ? '<br>満額は終了' : (card["募集枚数"] || '-')}</div>
+      <div class="card-note">${isZero ? 'ただいまの価格' : ''}</div>
+    </div>
+    <div class="card-price">${priceDisplay}</div>
+  </div>
+`;
+
+  });
+
+  document.getElementById('cardList').insertAdjacentHTML('beforeend', html);
+  currentPage++;
+  document.getElementById('loadMoreButton').style.display = (end >= filteredCards.length) ? 'none' : 'block';
+}
+
+document.getElementById('loadMoreButton').addEventListener('click', displayNextPage);
+
+document.getElementById('resetButton').addEventListener('click', () => {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('sortSelect').value = 'price';
+  applyFilterSort();
+});
+
+document.getElementById('searchInput').addEventListener('input', applyFilterSort);
+document.getElementById('sortSelect').addEventListener('change', applyFilterSort);
+
+fetchCsvData();
+
+  </script>
+</body>
+</html>
