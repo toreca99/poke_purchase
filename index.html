@@ -426,10 +426,37 @@ let currentPage = 0;
 const cardsPerPage = 96;
 let showImages = true;
 
-function kataToHira(str){ return str.replace(/[\u30a1-\u30f6]/g, match => String.fromCharCode(match.charCodeAt(0)-0x60)); }
-function normalizeLatin(str){ return str.toLowerCase().replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0)-0xFEE0)).replace(/[^a-z0-9ぁ-ん]/g,''); }
-function splitKeywords(str){ return str.split(/[\s,・／]+/).map(s => normalizeLatin(kataToHira(s))).filter(Boolean); }
-function getCheckedValues(){ const checked = document.querySelectorAll('.checkbox-group input:checked'); return Array.from(checked).map(cb=>cb.value); }
+// カタカナ → ひらがな
+function kataToHira(str){
+  return str.replace(/[\u30a1-\u30f6]/g, match => String.fromCharCode(match.charCodeAt(0)-0x60));
+}
+
+// 英数字全角 → 半角、小文字化、ひらがな統一、漢字は残す
+function normalizeLatin(str){
+  return str
+    .toLowerCase()
+    // 全角英数字 → 半角
+    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+    // 全角スペース → 半角
+    .replace(/\u3000/g, ' ')
+    // ひらがな⇔カタカナ統一（カタカナはひらがなに変換済み）
+    .replace(/[\u30a1-\u30f6]/g, s => String.fromCharCode(s.charCodeAt(0) - 0x60))
+    // 記号類は削除（漢字・ひらがな・英数字は残す）
+    .replace(/[^a-z0-9ぁ-ん一-龯]/g,'');
+}
+
+// 入力文字列をスペース・カンマ・スラッシュで分割して正規化
+function splitKeywords(str){
+  return str.split(/[\s,・／]+/)
+            .map(s => normalizeLatin(kataToHira(s)))
+            .filter(Boolean);
+}
+
+// チェックボックスで選択された値を取得
+function getCheckedValues(){
+  const checked = document.querySelectorAll('.checkbox-group input:checked');
+  return Array.from(checked).map(cb => cb.value);
+}
 
 function applyFilterSort(sortValueFromBtn){
   const keyword = document.getElementById('searchInput').value.trim();
@@ -519,24 +546,31 @@ const priceDisplay = showImages
   document.getElementById('loadMoreButton').style.display=(end>=filteredCards.length)?'none':'block';
 }
 
-// イベント
+// イベント 
 document.getElementById('loadMoreButton').addEventListener('click', displayNextPage);
-document.getElementById('resetButton').addEventListener('click',()=>{
-  document.getElementById('searchInput').value='';
-  document.querySelectorAll('.checkbox-group input').forEach(cb=>cb.checked=false);
-  document.querySelectorAll('.sort-btn').forEach(btn=>btn.classList.remove('active'));
+
+document.getElementById('resetButton').addEventListener('click', () => {
+  document.getElementById('searchInput').value = '';
+  document.querySelectorAll('.checkbox-group input').forEach(cb => cb.checked = false);
+  document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
   document.querySelector('.sort-btn[data-sort="price"]').classList.add('active');
   applyFilterSort('price');
 });
-document.getElementById('searchInput').addEventListener('input', () => {
-  // チェックボックスをすべてオフ
-  document.querySelectorAll('.checkbox-group input').forEach(cb => cb.checked = false);
 
-  // フィルタ＆表示更新
+document.getElementById('searchInput').addEventListener('input', () => {
+  // 検索ワード入力時 → チェックボックスをすべてオフ
+  document.querySelectorAll('.checkbox-group input').forEach(cb => cb.checked = false);
   applyFilterSort();
 });
 
-document.querySelectorAll('.checkbox-group input').forEach(cb=>cb.addEventListener('change',()=>applyFilterSort()));
+// チェックボックス操作時 → 検索ワードをクリア
+document.querySelectorAll('.checkbox-group input').forEach(cb =>
+  cb.addEventListener('change', () => {
+    document.getElementById('searchInput').value = '';
+    applyFilterSort();
+  })
+);
+
 document.querySelectorAll('.sort-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
