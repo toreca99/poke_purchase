@@ -11,7 +11,7 @@
   --color-primary: #f88379;       /* メインカラー（ボタンなど） */
   --color-gray-light: #f9f9f9;    /* カード背景 */
   --color-gray-border: #ccc;      /* カード境界線 */
-  --font-size-base: 12px; /* 基本文字サイズを小さめに */
+  --font-size-base: 16px; /* 基本文字サイズを小さめに */
   --font-size-small: 11px;
   --font-size-xsmall: 9px;
   --card-border-radius: 4px;      /* カード角丸 */
@@ -29,7 +29,7 @@ body {
   background: #fff;
 }
 h1 {
-  font-size: 22px;       /* 文字サイズを少し大きく */
+  font-size: 26px;       /* 文字サイズを少し大きく */
   font-weight: bold;
   text-align: center;    /* 中央揃え */
   margin-bottom: 6px;   /* 下の余白も少し広げる */
@@ -134,9 +134,9 @@ h1 {
    カード1枚
    ================================ */
 .card {
-  border: 1px solid var(--color-gray-border);
+  border: 2px solid var(--color-gray-border);
   border-radius: var(--card-border-radius);
-  padding: 2px;
+  padding: 4px;
   text-align: center;
   background-color: var(--color-gray-light);
   font-size: var(--font-size-xsmall);
@@ -150,7 +150,7 @@ h1 {
 .card img {
   width: 100%;
   height: auto;
-  max-height: 80px;
+  max-height: 140px;
   object-fit: contain;
   margin-bottom: 4px;
 }
@@ -159,7 +159,7 @@ h1 {
 .card-name {
   font-weight: bold;
   margin: 2px 0;
-  font-size: 7px;
+  font-size: 9px;
   white-space: normal;
   cursor: pointer;
 }
@@ -174,14 +174,14 @@ h1 {
 
 /* 募集枚数 */
 .card-quantity {
-  font-size: 9px;
+  font-size: 12px;
   font-weight: bold;
   color: #a66b6f;
 }
 
 /* 注意書き */
 .card-note {
-  font-size: 8px;
+  font-size: 9px;
   color: #555;
   margin-top: 2px;
 }
@@ -189,7 +189,7 @@ h1 {
 /* 価格 */
 .card-price {
   font-weight: bold;
-  font-size: 12px;
+  font-size: 16px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
