@@ -115,11 +115,19 @@ h1 {
   display: grid; 
   gap: 8px; 
 }
+
+/* スマホ表示（767px以下） */
 @media (max-width: 767px) { 
-  .card-grid { grid-template-columns: repeat(4, 1fr); } 
+  .card-grid:not(.no-image) { 
+    grid-template-columns: repeat(4, 1fr); 
+  } 
 }
+
+/* PC表示（768px以上） */
 @media (min-width: 768px) { 
-  .card-grid { grid-template-columns: repeat(8, 1fr); } 
+  .card-grid { 
+    grid-template-columns: repeat(8, 1fr); 
+  } 
 }
 
 /* ================================
