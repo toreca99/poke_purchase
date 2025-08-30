@@ -401,7 +401,7 @@ img.lazy.loaded { filter: none; }
   </div>
 
   <div class="search-wrapper">
-    <input type="text" id="searchInput" placeholder="カード名や型番、収録パックで検索" aria-label="カード検索" />
+    <input type="text" id="searchInput" placeholder="カード名や型番で検索（ひらがな検索対応）" aria-label="カード検索" />
   </div>
 
 
@@ -566,10 +566,18 @@ document.getElementById('searchInput').addEventListener('input', () => {
 // チェックボックス操作時 → 検索ワードをクリア
 document.querySelectorAll('.checkbox-group input').forEach(cb =>
   cb.addEventListener('change', () => {
+    if (cb.checked) {
+      // 自分以外のチェックを外す
+      document.querySelectorAll('.checkbox-group input').forEach(other => {
+        if (other !== cb) other.checked = false;
+      });
+    }
+    // （cb.checked が false の場合は何もしない → 全部未選択もOK）
     document.getElementById('searchInput').value = '';
     applyFilterSort();
   })
 );
+
 
 document.querySelectorAll('.sort-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
