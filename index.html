@@ -29,7 +29,7 @@ body {
   background: #fff;
 }
 h1 {
-  font-size: 26px;       /* 文字サイズを少し大きく */
+  font-size: 22px;       /* 文字サイズを少し大きく */
   font-weight: bold;
   text-align: center;    /* 中央揃え */
   margin-bottom: 6px;   /* 下の余白も少し広げる */
@@ -50,7 +50,7 @@ h1 {
   display: flex; 
   flex-direction: column; 
   gap: 12px; 
-  margin-bottom: 8px; 
+  margin-bottom: 10px; 
 }
 .search-wrapper { 
   display: flex; 
@@ -59,8 +59,8 @@ h1 {
 }
 #searchInput { 
   flex: 1; 
-  padding: 12px 14px;  /* 縦横とも少し大きめ */
-  font-size: 16px;    /* 文字も大きく見やすく */
+  padding: 8px 10px;  /* 縦横とも少し大きめ */
+  font-size: 14px;    /* 文字も大きく見やすく */
   border: 1px solid var(--color-gray-border); 
   border-radius: 4px; 
 }
@@ -116,10 +116,10 @@ h1 {
   gap: 8px; 
 }
 @media (max-width: 767px) { 
-  .card-grid { grid-template-columns: repeat(6, 1fr); } 
+  .card-grid { grid-template-columns: repeat(4, 1fr); } 
 }
 @media (min-width: 768px) { 
-  .card-grid { grid-template-columns: repeat(6, 1fr); } 
+  .card-grid { grid-template-columns: repeat(8, 1fr); } 
 }
 
 /* ================================
@@ -142,7 +142,7 @@ h1 {
 .card img {
   width: 100%;
   height: auto;
-  max-height: 120px;
+  max-height: 80px;
   object-fit: contain;
   margin-bottom: 4px;
 }
@@ -151,7 +151,7 @@ h1 {
 .card-name {
   font-weight: bold;
   margin: 2px 0;
-  font-size: 10px;
+  font-size: 7px;
   white-space: normal;
   cursor: pointer;
 }
@@ -166,7 +166,7 @@ h1 {
 
 /* 募集枚数 */
 .card-quantity {
-  font-size: 14px;
+  font-size: 9px;
   font-weight: bold;
   color: #a66b6f;
 }
@@ -181,7 +181,7 @@ h1 {
 /* 価格 */
 .card-price {
   font-weight: bold;
-  font-size: 14x;
+  font-size: 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -377,27 +377,33 @@ img.lazy.loaded { filter: none; }
 
   <div class="checkbox-group">
     <strong>ポケモン種族</strong>
-    <label><input type="checkbox" value="リザードン"><span>リザードン系統</span></label>
     <label><input type="checkbox" value="ピカチュウ"><span>ピカチュウ系統</span></label>
+    <label><input type="checkbox" value="リザードン"><span>リザードン系統</span></label>
+    <label><input type="checkbox" value="ブイズ"><span>ブイズ系統</span></label>
     <label><input type="checkbox" value="ミュウ"><span>ミュウ系統</span></label>
-    <label><input type="checkbox" value="ナンジャモ"><span>ナンジャモ系統</span></label>
+    <label><input type="checkbox" value="ゲンガー"><span>ゲンガー系統</span></label>
+    <label><input type="checkbox" value="レックウザ"><span>レックウザ系統</span></label>
   </div>
   <div class="checkbox-group">
     <strong>キャラクター</strong>
+    <label><input type="checkbox" value="サポート"><span>サポート系統</span></label>
     <label><input type="checkbox" value="リーリエ"><span>リーリエ系統</span></label>
+    <label><input type="checkbox" value="アセロラ"><span>アセロラ系統</span></label>
     <label><input type="checkbox" value="マリィ"><span>マリィ系統</span></label>
+    <label><input type="checkbox" value="ナンジャモ"><span>ナンジャモ系統</span></label>
   </div>
   <div class="checkbox-group">
     <strong>レア・特殊</strong>
-    <label><input type="checkbox" value="SAR"><span>SAR系統</span></label>
-    <label><input type="checkbox" value="V"><span>VMAX・V系統</span></label>
-    <label><input type="checkbox" value="GX"><span>GX系統</span></label>
+    <label><input type="checkbox" value="メガ"><span>メガ系統</span></label>
     <label><input type="checkbox" value="ex"><span>ex・EX系統</span></label>
+    <label><input type="checkbox" value="AR"><span>AR・CHR系統</span></label>
+    <label><input type="checkbox" value="V"><span>V・VMAX・VSTAR系統</span></label>
+    <label><input type="checkbox" value="GX"><span>GX系統</span></label>
     <label><input type="checkbox" value="nagaba"><span>nagaba系統</span></label>
-    <label><input type="checkbox" value="メガ"><span>メガシンカ系統</span></label>
-    <label><input type="checkbox" value="マス"><span>マスターボール系統</span></label>
-    <label><input type="checkbox" value="テラスタル"><span>テラスタル系統</span></label>
+    <label><input type="checkbox" value="マスボ"><span>マスターボール系統</span></label>
+    <label><input type="checkbox" value="海外"><span>海外系統</span></label>
     <label><input type="checkbox" value="th"><span>周年系統</span></label>
+    <label><input type="checkbox" value="マック"><span>マックプロモ系統</span></label>
   </div>
 
   <div class="search-wrapper">
@@ -465,20 +471,37 @@ function applyFilterSort(sortValueFromBtn){
   let sortValue = sortValueFromBtn || document.querySelector('.sort-btn.active')?.dataset.sort || 'price';
 
   filteredCards = cards.filter(card => {
+    // 🔹カード名で検索判定
     const target = normalizeLatin(kataToHira(card["カード名 型番 レアリティ"]||""));
     const keywordMatch = keywords.every(k => target.includes(k));
-    const checkboxMatch = checkedValues.length===0 || checkedValues.some(val=>target.includes(normalizeLatin(kataToHira(val))));
+
+// 🔹分類でチェックボックス判定（分類1 または 分類2 に含まれるかで判定）
+const classification1 = normalizeLatin(kataToHira(card["分類1"] || ""));
+const classification2 = normalizeLatin(kataToHira(card["分類2"] || ""));
+const checkboxMatch =
+  checkedValues.length===0 ||
+  checkedValues.some(val => classification1.includes(normalizeLatin(kataToHira(val))) ||
+                            classification2.includes(normalizeLatin(kataToHira(val))));
+
     return keywordMatch && checkboxMatch;
   });
 
   if(sortValue==='price'){
-    filteredCards.sort((a,b)=> (Number((b["店頭価格"]||'0').replace(/[¥,\s]/g,''))||0) - (Number((a["店頭価格"]||'0').replace(/[¥,\s]/g,''))||0));
+    filteredCards.sort((a,b)=> 
+      (Number((b["店頭価格"]||'0').replace(/[¥,\s]/g,''))||0) -
+      (Number((a["店頭価格"]||'0').replace(/[¥,\s]/g,''))||0)
+    );
   } else if(sortValue==='priceLow'){
-    filteredCards.sort((a,b)=> (Number((a["店頭価格"]||'0').replace(/[¥,\s]/g,''))||0) - (Number((b["店頭価格"]||'0').replace(/[¥,\s]/g,''))||0));
+    filteredCards.sort((a,b)=> 
+      (Number((a["店頭価格"]||'0').replace(/[¥,\s]/g,''))||0) -
+      (Number((b["店頭価格"]||'0').replace(/[¥,\s]/g,''))||0)
+    );
   }
 
-  currentPage=0; displayNextPage();
+  currentPage=0;
+  displayNextPage();
 }
+
 
 async function fetchCsvData(){
   document.getElementById('cardList').textContent='読み込み中.....';
@@ -486,14 +509,17 @@ async function fetchCsvData(){
     const res = await fetch(csvUrl);
     const text = await res.text();
     const parsed = Papa.parse(text,{header:true, skipEmptyLines:true});
-    cards = parsed.data.map(card=>(({ 
-      "カード名 型番 レアリティ": card["カード名 型番 レアリティ"],
-      "募集枚数": card["募集枚数"],
-      "店頭価格": card["店頭価格"],
-      "最低価格": card["最低価格"],
-      "画像URL": card["画像URL"],
-      "グレイアウト発動時専用": card["グレイアウト発動時専用"]
-    })));
+cards = parsed.data.map(card=>({
+  "カード名 型番 レアリティ": card["カード名 型番 レアリティ"],
+  "分類1": card["分類1"],   // ← 新しく追加
+  "分類2": card["分類2"],   // ← 新しく追加
+  "募集枚数": card["募集枚数"],
+  "店頭価格": card["店頭価格"],
+  "最低価格": card["最低価格"],
+  "画像URL": card["画像URL"],
+  "グレイアウト発動時専用": card["グレイアウト発動時専用"]
+}));
+
     applyFilterSort();
   } catch(e){ console.error(e); document.getElementById('cardList').textContent='データの読み込みに失敗しました。'; }
 }
