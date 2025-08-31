@@ -647,10 +647,10 @@ function displayNextPage(){
     const normalPrice=Number((card["店頭価格"]||'0').replace(/[¥,\s]/g,''))||0;
     const foilPrice=Number((card["最低価格"]||'0').replace(/[¥,\s]/g,''))||0;
 const priceDisplay = showImages
-  ? isZero ? (card["グレイアウト発動時専用"]||'店頭で確認') 
-  : `<span class="price-store">店頭買取価格</span><br><span class="price-store">¥${normalPrice.toLocaleString()}</span><br><span class="price-mail">最低買取価格</span><br><span class="price-mail">¥${foilPrice.toLocaleString()}</span>`
-  : isZero ? (card["グレイアウト発動時専用"]||'店頭で確認') 
-  : `<span class="price-store-inline">店頭買取価格 ¥${normalPrice.toLocaleString()}</span> / <span class="price-mail-inline">最低買取価格 ¥${foilPrice.toLocaleString()}</span>`;
+  ? isZero ? (card["グレイアウト発動時専用"]||'DMで確認') 
+  : `<span class="price-store">共通買取価格</span><br><span class="price-store">¥${normalPrice.toLocaleString()}</span><br><span class="price-mail">最低買取価格</span><br><span class="price-mail">¥${foilPrice.toLocaleString()}</span>`
+  : isZero ? (card["グレイアウト発動時専用"]||'DMで確認') 
+  : `<span class="price-store-inline">共通買取価格 ¥${normalPrice.toLocaleString()}</span> / <span class="price-mail-inline">最低買取価格 ¥${foilPrice.toLocaleString()}</span>`;
 
 
     const div = document.createElement('div');
