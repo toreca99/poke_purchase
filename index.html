@@ -39,11 +39,34 @@ h1 {
 }
 
 
-.notice {
-  font-size: 10px;   /* 小さく */
-  line-height: 1.2;  /* 行間も少し詰める */
-  color: #d00;
-  margin-bottom: 6px; /* 少し余白も減らす */
+.notice-header {
+  font-size: 18px;      /* ヘッダー下でも読みやすい大きさ */
+  line-height: 1.5;     /* 行間少し広めで視認性アップ */
+  color: #333;
+  margin: 8px 0 20px 0;
+}
+
+.notice-header p {
+  margin: 4px 0;
+}
+
+.notice-important {
+  font-weight: bold;
+  color: #e53935;
+}
+
+.notice-sellpoint {
+  font-weight: 600;
+  color: #f57c00;
+}
+
+.notice-quick {
+  color: #1976d2;
+}
+
+.notice-dm {
+  font-weight: bold;
+  color: #388e3c;
 }
 
 
@@ -396,12 +419,20 @@ img.lazy.loaded { filter: none; }
 
 <h1>【ポケモンカード買取表(郵送も共通)】</h1>
 
-<div class="notice">
-※データ容量の都合上、読み込みに時間がかかる場合があります。<br>
-※価格や募集枚数の更新にラグがある場合があります。<br>
-※相場の変動や在庫状況によって、予告なく募集枚数や価格が変動する場合があります。<br>
-※募集枚数が0枚の場合でも購入できる場合があります。<br>
-※基本的に画像のカードは【PSA10】の価格でございます。未開封商品は【未開封】と記載のある商品の価格です。
+<div class="notice-header">
+  <p class="notice-important">
+    PSA10リアルタイム価格更新！地方の方も郵送で店舗同価格対応‼️
+  </p>
+  <p class="notice-sellpoint">
+    全国最高値カード多数＆ラインナップ随時強化中！査定後の交渉もOK🙆‍♀️
+  </p>
+  <p class="notice-quick">
+    東京近郊の方は秋葉原で対面買取も可能（11時～22時）<br>
+    郵送の場合、到着日相場で査定、最短翌日振込！
+  </p>
+  <p class="notice-dm">
+    買取希望カードを写真または文字でDM送信（25枚以上 or 合計30万円以上が対象）
+  </p>
 </div>
 
 <div class="controls">
