@@ -184,7 +184,7 @@ h1 {
    ================================ */
 .card-grid { 
   display: grid; 
-  gap: 5px; 
+  gap: 6px; /* ← 枚数優先なら 4px、見やすさ優先なら 6〜8px */
 }
 
 /* スマホ表示（767px以下） */
@@ -202,35 +202,35 @@ h1 {
 }
 
 /* ================================
-   カード1枚
+   カード1枚（調整版）
    ================================ */
 .card {
   border: 2px solid var(--color-gray-border);
   border-radius: var(--card-border-radius);
-  padding: 4px;
+  padding: 2px; /* ← 内側余白をさらに圧縮 */
   text-align: center;
   background-color: var(--color-gray-light);
   font-size: var(--font-size-xsmall);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 210px;
+  min-height: 220px; /* ← 画像を大きくした分 少し高さを確保 */
 }
 
 /* カード画像 */
 .card img {
   width: 100%;
   height: auto;
-  max-height: 160px;
+  max-height: 180px; /* ← 160px → 180px に拡大 */
   object-fit: contain;
-  margin-bottom: 4px;
+  margin-bottom: 2px; /* ← 余白をさらに削る */
 }
 
 /* カード名 */
 .card-name {
   font-weight: bold;
-  margin: 2px 0;
-  font-size: 12px;
+  margin: 1px 0;   /* ← 余白を最小限に */
+  font-size: 14px; /* ← 12px → 14px に拡大 */
   white-space: normal;
   cursor: pointer;
 }
@@ -245,27 +245,31 @@ h1 {
 
 /* 募集枚数 */
 .card-quantity {
-  font-size: 14px;
+  font-size: 15px;   /* ← 14px → 15px */
   font-weight: bold;
   color: #a66b6f;
+  margin: 1px 0;
 }
 
 /* 注意書き */
 .card-note {
-  font-size: 9px;
+  font-size: 10px;   /* ← 9px → 10px */
   color: #555;
-  margin-top: 2px;
+  margin-top: 1px;   /* ← 間隔を詰める */
+  line-height: 1.2;
 }
 
 /* 価格 */
 .card-price {
   font-weight: bold;
-  font-size: 18px;
+  font-size: 20px;  /* ← 18px → 20px に強調 */
+  color: #e53935;   /* ← 価格は目立たせる */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-top: auto;
 }
+
 
 /* 価格色指定 */
 .price-store { color: #e53935 !important; font-weight: bold; }
