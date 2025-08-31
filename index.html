@@ -67,26 +67,43 @@ h1 {
 }
 
 
+/* チェックボックスグループ全体の余白 */
 .checkbox-group { 
-  margin-bottom: 4px;  /* 以前は16pxなど、必要に応じて調整 */
+  margin-bottom: 4px;  /* 必要に応じて調整 */
 }
+
+/* グループ見出し（カテゴリ名など） */
 .checkbox-group strong { 
   display: block; 
-  margin-bottom: 1px;  /* 親タイトルとラベルの間隔を縮める */
+  margin-bottom: 1px; 
+  font-size: 18px;      /* ← 見出しを少し大きく */
+  font-weight: bold;
 }
+
+/* ラベル（チェックボックス横の文字） */
 .checkbox-group label {
   display: inline-flex;
   align-items: center;
   margin-right: 4px;
   padding-left: 4px;
   cursor: pointer;
-  line-height: 1.1; /* 行間を詰める */
+  line-height: 1.1;
+  font-size: 16px;      /* ← ラベル文字を大きめに */
 }
+
+/* チェックボックス本体 */
+.checkbox-group input[type="checkbox"] {
+  transform: scale(1.3); /* ← チェックボックスを拡大 */
+  margin-right: 6px;     /* ← 文字との間隔 */
+}
+
+/* チェック済みのラベル装飾 */
 .checkbox-group input:checked + span {
   background-color: #f0c0c0;
   padding: 1px 2px;
   border-radius: 2px;
 }
+
 
 /* ボタン */
 .buttons-wrapper { 
