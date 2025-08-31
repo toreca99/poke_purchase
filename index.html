@@ -29,11 +29,15 @@ body {
   background: #fff;
 }
 h1 {
-  font-size: 32px;       /* 文字サイズを少し大きく */
-  font-weight: bold;
-  text-align: center;    /* 中央揃え */
-  margin-bottom: 8px;    /* 文字が大きくなる分、下の余白も少し増やす */
+  font-size: 36px;                 /* 大きめの文字サイズ */
+  font-weight: 900;                /* 太字で豪華さを強調 */
+  text-align: center;              /* 中央揃え */
+  background: linear-gradient(90deg, #f88379, #e53935, #ff6f61); /* 左から右へグラデーション */
+  -webkit-background-clip: text;   /* 背景を文字にクリップ */
+  -webkit-text-fill-color: transparent; /* グラデーションを文字に適用 */
+  margin-bottom: 12px;             /* 下の余白 */
 }
+
 
 .notice {
   font-size: 10px;   /* 小さく */
