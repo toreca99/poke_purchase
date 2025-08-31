@@ -636,42 +636,57 @@ const observer = new IntersectionObserver(entries=>{
 });
 
 function displayNextPage(){
-  const start=currentPage*cardsPerPage, end=start+cardsPerPage;
-  const cardsToShow = filteredCards.slice(start,end);
-  if(currentPage===0) document.getElementById('cardList').innerHTML='';
+  const start = currentPage * cardsPerPage;
+  const end = start + cardsPerPage;
+  const cardsToShow = filteredCards.slice(start, end);
+
+  if(currentPage === 0) document.getElementById('cardList').innerHTML = '';
 
   const cardGrid = document.getElementById('cardList');
-  cardsToShow.forEach(card=>{
-    const isZero=(card["募集枚数"]||"").trim()==="0枚募集中";
-    const grayClass=isZero?'gray-out':'';
-    const normalPrice=Number((card["店頭価格"]||'0').replace(/[¥,\s]/g,''))||0;
-    const foilPrice=Number((card["最低価格"]||'0').replace(/[¥,\s]/g,''))||0;
-const priceDisplay = showImages
-  ? isZero ? (card["グレイアウト発動時専用"]||'DMで確認') 
-  : `<span class="price-store">共通買取価格</span><br><span class="price-store">¥${normalPrice.toLocaleString()}</span><br><span class="price-mail">最低買取価格</span><br><span class="price-mail">¥${foilPrice.toLocaleString()}</span>`
-  : isZero ? (card["グレイアウト発動時専用"]||'DMで確認') 
-  : `<span class="price-store-inline">共通買取価格 ¥${normalPrice.toLocaleString()}</span> / <span class="price-mail-inline">最低買取価格 ¥${foilPrice.toLocaleString()}</span>`;
+  const fragment = document.createDocumentFragment(); // ← ここでフラグメント作成
 
+  cardsToShow.forEach(card => {
+    const isZero = (card["募集枚数"]||"").trim() === "0枚募集中";
+    const grayClass = isZero ? 'gray-out' : '';
+    const normalPrice = Number((card["店頭価格"]||'0').replace(/[¥,\s]/g,'')) || 0;
+    const foilPrice = Number((card["最低価格"]||'0').replace(/[¥,\s]/g,'')) || 0;
+    
+    const priceDisplay = showImages
+      ? isZero ? (card["グレイアウト発動時専用"]||'DMで確認') 
+               : `<span class="price-store">共通買取価格</span><br><span class="price-store">¥${normalPrice.toLocaleString()}</span><br><span class="price-mail">最低買取価格</span><br><span class="price-mail">¥${foilPrice.toLocaleString()}</span>`
+      : isZero ? (card["グレイアウト発動時専用"]||'DMで確認') 
+               : `<span class="price-store-inline">共通買取価格 ¥${normalPrice.toLocaleString()}</span> / <span class="price-mail-inline">最低買取価格 ¥${foilPrice.toLocaleString()}</span>`;
 
     const div = document.createElement('div');
-    div.className = `card ${grayClass} ${!showImages ? 'no-image':''}`;
+    div.className = `card ${grayClass} ${!showImages ? 'no-image' : ''}`;
     div.innerHTML = `
       <img data-src="${card.画像URL}" loading="lazy" alt="${card["カード名 型番 レアリティ"]}" class="lazy"/>
       <div class="card-name">${card["カード名 型番 レアリティ"]}</div>
       <div class="card-texts">
         <div class="card-price">${priceDisplay}</div>
-        <div class="card-quantity">本日${isZero?'<br>満額は終了':(card["募集枚数"]||'-')}</div>
+        <div class="card-quantity">本日${isZero ? '<br>満額は終了' : (card["募集枚数"]||'-')}</div>
       </div>
     `;
-    cardGrid.appendChild(div);
+
+    fragment.appendChild(div);
+
+    // IntersectionObserver の登録もここでまとめて実行
     const img = div.querySelector('img.lazy');
     if(img) observer.observe(img);
   });
 
-  if(showImages){ cardGrid.classList.remove('no-image'); } else { cardGrid.classList.add('no-image'); }
+  cardGrid.appendChild(fragment); // ← DOM はまとめて追加
+
+  if(showImages){
+    cardGrid.classList.remove('no-image');
+  } else {
+    cardGrid.classList.add('no-image');
+  }
+
   currentPage++;
-  document.getElementById('loadMoreButton').style.display=(end>=filteredCards.length)?'none':'block';
+  document.getElementById('loadMoreButton').style.display = (end >= filteredCards.length) ? 'none' : 'block';
 }
+
 
 // イベント 
 document.getElementById('loadMoreButton').addEventListener('click', displayNextPage);
