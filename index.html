@@ -278,17 +278,29 @@ h1 {
 /* グレイアウト（募集0枚など） */
 .gray-out { opacity: 0.9; filter: grayscale(100%); pointer-events: none; }
 
-/* さらに読み込むボタン */
+/* ================================
+   「もっと見る」ボタン（豪華・大きめ）
+   ================================ */
 #loadMoreButton {
-  margin-top: 30px;
+  display: block;
   width: 100%;
-  padding: 36px 12px;
-  font-size: 15px;
+  font-size: 18px;          /* 文字を大きめ */
+  font-weight: bold;
+  padding: 32px 0;          /* 縦方向を広くして押しやすく */
+  margin: 20px 0;
+  text-align: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f88379, #e53935); /* 豪華な赤系グラデーション */
+  color: #fff;
   border: none;
-  background-color: var(--color-primary);
-  color: white;
-  border-radius: var(--card-border-radius);
   cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+  #loadMoreButton:hover {
+  background: linear-gradient(135deg, #e53935, #b71c1c);
+  transform: translateY(-2px);
 }
 
 /* 画像読み込み時のぼかし */
@@ -423,12 +435,6 @@ img.lazy.loaded { filter: none; }
   }
 }
 
-
-  /* ✅ 「さらに読み込む」ボタンも圧縮 */
-  #loadMoreButton {
-    font-size: 12px;
-    padding: 12px 6px;
-  }
 
   /* ✅ 画像も少し小さめ（縦を削る） */
   .card img {
