@@ -151,25 +151,32 @@ h1 {
 
 
 
-/* ボタン */
 .buttons-wrapper { 
   display: flex; 
-  gap: 12px; 
+  gap: 10px;          /* ボタン同士の隙間 */
   width: 100%; 
-  margin-top: 6px; 
+  margin-top: 12px; 
 }
+
 .buttons-wrapper button {
+  flex: 1;            /* ← 均等に横幅を取る */
+  padding: 14px 0;    /* ← 高さ調整（お好みで18pxくらいでもOK） */
+  font-size: 16px;    /* ← 文字サイズ */
+  font-weight: bold; 
+  text-align: center;
   background: linear-gradient(135deg, #f88379, #e53935);
   color: white;
-  border-radius: 16px;
+  border-radius: 10px;
   box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  cursor: pointer;
   transition: 0.2s;
 }
 
 .buttons-wrapper button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
 }
+
 
 
 /* ================================
