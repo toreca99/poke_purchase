@@ -35,7 +35,9 @@ h1 {
   background: linear-gradient(90deg, #f88379, #e53935, #ff6f61); /* 左から右へグラデーション */
   -webkit-background-clip: text;   /* 背景を文字にクリップ */
   -webkit-text-fill-color: transparent; /* グラデーションを文字に適用 */
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* 文字に影をつける */
   margin-bottom: 12px;             /* 下の余白 */
+  letter-spacing: 1px;  /* 少し文字間を広げる */
 }
 
 
@@ -89,8 +91,14 @@ h1 {
   padding: 10px 14px;      /* ← 縦横の余白を小さめに */
   font-size: 36px;       /* ← 正常な文字サイズに修正 */
   border: 1px solid var(--color-gray-border); 
-  border-radius: 4px; 
+  border-radius: 6px; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   height: 54px;          /* ← 縦の高さを少し抑える */
+}
+  #searchInput:focus {
+  outline: none;
+  border-color: #e53935;
+  box-shadow: 0 2px 6px rgba(229,57,53,0.3);
 }
 
 
@@ -125,12 +133,22 @@ h1 {
   margin-right: 6px;     /* ← 文字との間隔 */
 }
 
-/* チェック済みのラベル装飾 */
 .checkbox-group input:checked + span {
-  background-color: #f0c0c0;
-  padding: 1px 2px;
-  border-radius: 2px;
+  background: linear-gradient(45deg, #f88379, #e53935);
+  color: white;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: 0.2s;
 }
+  .checkbox-group input[type="checkbox"] {
+  accent-color: #e53935; /* チェック時の色を赤系で統一 */
+  transform: scale(1.4);
+  margin-right: 6px;
+  cursor: pointer;
+}
+
+
 
 
 /* ボタン */
@@ -141,19 +159,18 @@ h1 {
   margin-top: 6px; 
 }
 .buttons-wrapper button {
-  flex: 1;
-  padding: 14px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background-color: #666;
+  background: linear-gradient(135deg, #f88379, #e53935);
   color: white;
-  text-align: center;
+  border-radius: 16px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  transition: 0.2s;
 }
-.buttons-wrapper button.active { 
-  background-color: var(--color-primary); 
+
+.buttons-wrapper button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
 }
+
 
 /* ================================
    カードグリッド
